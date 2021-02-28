@@ -17,7 +17,8 @@ namespace EmergencyCall.Api.DTO.UserDTO
         public string Gender { get; set; }
         public DateTime BirthDate { get; set; }
         public string PhotoUrl { get; set; }
-        public string Location { get; set; }
+        public decimal Altitude { get; set; }
+        public decimal Latitude { get; set; }
         public string NotifyId { get; set; }
         public string BloodGroup { get; set; }
 
