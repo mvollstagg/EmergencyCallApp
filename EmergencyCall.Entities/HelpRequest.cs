@@ -7,6 +7,8 @@ namespace EmergencyCall.Entities
     {
         public string Location { get; set; }
         public string Details { get; set; }
+        public bool IsCancelled { get; set; } = false;
+        public string CancelReason { get; set; }
 
         [ForeignKey("User")]
         public int UserId { get; set; }

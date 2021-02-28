@@ -35,7 +35,7 @@ namespace EmergencyCall.Api.Controllers
         }
 
         [HttpPost("")]
-        public async Task<ActionResult<HelpRequestDTO>> CreateHelpRequest([FromBody] SaveHelpRequestDTO createHelpRequestResource)
+        public async Task<ActionResult<HelpRequestDTO>> CreateHelpRequest([FromBody] CreateHelpRequestDTO createHelpRequestResource)
         {
             var validator = new CreateHelpRequestResourceValidator();
             var validationResult = await validator.ValidateAsync(createHelpRequestResource);
@@ -43,7 +43,7 @@ namespace EmergencyCall.Api.Controllers
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors); // this needs refining, but for demo it is ok
 
-            var helpRequestToCreate = _mapper.Map<SaveHelpRequestDTO, HelpRequest>(createHelpRequestResource);
+            var helpRequestToCreate = _mapper.Map<CreateHelpRequestDTO, HelpRequest>(createHelpRequestResource);
             var newHelpRequest = await _helpRequestService.CreateHelpRequest(helpRequestToCreate);
 
             var helpRequest = await _helpRequestService.GetHelpRequestById(newHelpRequest.Id);

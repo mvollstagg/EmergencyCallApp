@@ -18,7 +18,7 @@ namespace EmergencyCall.Api.Mapping
             CreateMap<CreateUserDTO, User>();
 
             CreateMap<HelpRequestDTO, HelpRequest>();
-            CreateMap<SaveHelpRequestDTO, HelpRequest>();
+            CreateMap<CreateHelpRequestDTO, HelpRequest>();
         }
     }
 }

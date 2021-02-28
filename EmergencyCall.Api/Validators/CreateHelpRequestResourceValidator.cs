@@ -8,7 +8,7 @@ using EmergencyCall.Api.DTO;
 
 namespace EmergencyCall.Api.Validators
 {
-    public class CreateHelpRequestResourceValidator : AbstractValidator<SaveHelpRequestDTO>
+    public class CreateHelpRequestResourceValidator : AbstractValidator<CreateHelpRequestDTO>
     {
         public CreateHelpRequestResourceValidator()
         {
