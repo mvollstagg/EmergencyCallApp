@@ -37,8 +37,8 @@ namespace EmergencyCall.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IHelpRequestService, HelpRequestService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IHelpRequestService, HelpRequestService>();
 
             services.AddCors(options =>
             {
@@ -46,7 +46,7 @@ namespace EmergencyCall.Api
             });
             services.AddControllers().AddJsonOptions(o => o.JsonSerializerOptions.DefaultBufferSize = 300);
             services.AddDbContext<ApplicationDbContext>(options => options
-                                                                .UseSqlServer(Configuration.GetConnectionString("DevConnection"), x => x.MigrationsAssembly("AtmaVer.Data")));
+                                                                .UseSqlServer(Configuration.GetConnectionString("DevConnection"), x => x.MigrationsAssembly("EmergencyApp.Data")));
     
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
@@ -68,7 +68,7 @@ namespace EmergencyCall.Api
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = "AtmaVerApi"
+                    Title = "EmergencyAppApi"
                 });
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -123,6 +123,7 @@ namespace EmergencyCall.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            // app.UseHeaderCheckMiddleware();
 
             app.UseAuthorization();
             app.UseAuthentication();

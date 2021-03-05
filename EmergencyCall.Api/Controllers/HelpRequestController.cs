@@ -16,7 +16,7 @@ namespace EmergencyCall.Api.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize(Roles = "user")]
+    [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "user")]
     public class HelpRequestController : ControllerBase
     {
         private readonly IHelpRequestService _helpRequestService;
