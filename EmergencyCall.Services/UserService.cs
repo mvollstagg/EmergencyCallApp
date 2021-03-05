@@ -45,5 +45,11 @@ namespace EmergencyCall.Services
 
             await _unitOfWork.CommitAsync();
         }
+
+        public async Task<User> UserLogin(string email, string password)
+        {
+            var user = await _unitOfWork.Users.UserLogin(email, password);
+            return user;
+        } 
     }
 }

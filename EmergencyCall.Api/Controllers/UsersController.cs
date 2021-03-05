@@ -10,11 +10,13 @@ using EmergencyCall.Api.DTO.UserDTO;
 using EmergencyCall.Api.Validators;
 using EmergencyCall.Api.DTO;
 using EmergencyCall.Services.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EmergencyCall.Api.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
