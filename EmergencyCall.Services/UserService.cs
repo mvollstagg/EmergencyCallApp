@@ -42,6 +42,13 @@ namespace EmergencyCall.Services
         public async Task UpdateUser(User userToBeUpdated, User user)
         {
             userToBeUpdated.FirstName = user.FirstName;
+            userToBeUpdated.LastName = user.LastName;
+            userToBeUpdated.Email = user.Email;
+            userToBeUpdated.PhoneNumber = user.PhoneNumber;
+            userToBeUpdated.Gender = user.Gender;
+            userToBeUpdated.BirthDate = user.BirthDate;  
+            if(user.PasswordHash != null)
+                userToBeUpdated.PasswordHash = user.PasswordHash; 
 
             await _unitOfWork.CommitAsync();
         }

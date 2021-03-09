@@ -18,6 +18,7 @@ namespace EmergencyCall.Api.Mapping
             // Resource to Domain
             CreateMap<UserDTO, User>();
             CreateMap<CreateUserDTO, User>();
+            CreateMap<SaveUserDTO, User>();
 
             CreateMap<HelpRequestDTO, HelpRequest>();
             CreateMap<CreateHelpRequestDTO, HelpRequest>();

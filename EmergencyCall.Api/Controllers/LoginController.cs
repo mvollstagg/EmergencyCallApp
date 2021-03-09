@@ -88,10 +88,11 @@ namespace EmergencyCall.Api.Controllers
 
                 var claims = new []
                 {
+                    new Claim(ClaimTypes.Actor, user.Id.ToString()),
                     new Claim(JwtRegisteredClaimNames.Sub, user.FullName),
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
                     new Claim(ClaimTypes.Role, "user"),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 };
 
                 var token = new JwtSecurityToken(
