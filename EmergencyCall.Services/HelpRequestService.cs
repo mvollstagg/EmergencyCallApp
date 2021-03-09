@@ -32,7 +32,7 @@ namespace EmergencyCall.Services
 
         public async Task<IEnumerable<HelpRequest>> GetAllHelpRequests()
         {
-            return await _unitOfWork.HelpRequests.GetAllAsync();
+            return await _unitOfWork.HelpRequests.GetAllHelpRequests();
         }
 
         public async Task<HelpRequest> GetHelpRequestById(int id)

@@ -29,7 +29,7 @@ namespace EmergencyCall.Entities
         public string NotifyId { get; set; }
         public string BloodGroup { get; set; }
         public virtual ICollection<HelpRequest> HelpRequests { get; set; } = new HashSet<HelpRequest>();  
-
+        public virtual ICollection<HelpResponse> HelpResponses { get; set; } = new HashSet<HelpResponse>();
                
         [NotMapped]
         public string FullName{get{return this.FirstName+" "+this.LastName;} private set{}}

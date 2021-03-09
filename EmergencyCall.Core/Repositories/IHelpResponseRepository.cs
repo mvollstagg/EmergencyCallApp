@@ -4,8 +4,8 @@ using EmergencyCall.Entities;
 
 namespace EmergencyCall.Core.Repositories
 {
-    public interface IHelpRequestRepository : IRepository<HelpRequest>
+    public interface IHelpResponseRepository : IRepository<HelpResponse>
     {
-        Task<IEnumerable<HelpRequest>> GetAllHelpRequests();
+        
     }
 }

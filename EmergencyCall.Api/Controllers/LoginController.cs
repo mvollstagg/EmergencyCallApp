@@ -9,6 +9,10 @@ using EmergencyCall.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using EmergencyCall.Api.DTO.UserDTO;
+using EmergencyCall.Api.Validators;
+using AutoMapper;
+using EmergencyCall.Services.Helpers;
 
 namespace EmergencyCall.Api.Controllers
 {
@@ -17,15 +21,37 @@ namespace EmergencyCall.Api.Controllers
     public class LoginController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IMapper _mapper;
         private readonly IConfiguration _config;
         
 
-        public LoginController(IUserService userService, IConfiguration config)
+        public LoginController(IUserService userService, IConfiguration config, IMapper mapper)
         {
             this._userService = userService;
             this._config = config;
+            this._mapper = mapper;
         }
 
+        [HttpPost("")]
+        public async Task<ActionResult<UserDTO>> CreateUser([FromBody] CreateUserDTO createUserResource)
+        {
+            var validator = new CreateUserResourceValidator();
+            var validationResult = await validator.ValidateAsync(createUserResource);
+
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors); // this needs refining, but for demo it is ok
+
+            var userToCreate = _mapper.Map<CreateUserDTO, User>(createUserResource);
+            userToCreate.PasswordHash = HashHelper.CreatePasswordHash(createUserResource.Password, userToCreate.SecretKey);
+            var newUser = await _userService.CreateUser(userToCreate);
+
+            var user = await _userService.GetUserById(newUser.Id);
+
+            var userResource = _mapper.Map<User, UserDTO>(user);
+
+            return Ok(userResource);
+        }
+        
         [HttpPost]
         public async Task<IActionResult> Login(UserLoginModel user)
         {

@@ -19,5 +19,14 @@ namespace EmergencyCall.Data.Repositories
         {
             get { return _context as ApplicationDbContext; }
         }
+
+        public async Task<IEnumerable<HelpRequest>> GetAllHelpRequests()
+        {
+            return await ApplicationDbContext.HelpRequests
+                .Include(a => a.HelpResponses)
+                    .ThenInclude(b => b.User)
+                .Include(b => b.User)
+                .ToListAsync();
+        }
     }
 }

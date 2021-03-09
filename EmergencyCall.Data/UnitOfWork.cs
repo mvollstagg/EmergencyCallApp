@@ -11,6 +11,7 @@ namespace EmergencyCall.Data
         private readonly ApplicationDbContext _context;
         private UserRepository _userRepository;
         private HelpRequestRepository _helpRequestRepository;
+        private HelpResponseRepository _helpResponseRepository;
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -19,6 +20,7 @@ namespace EmergencyCall.Data
 
         public IUserRepository Users => _userRepository = _userRepository ?? new UserRepository(_context);
         public IHelpRequestRepository HelpRequests => _helpRequestRepository = _helpRequestRepository ?? new HelpRequestRepository(_context);
+        public IHelpResponseRepository HelpResponses => _helpResponseRepository = _helpResponseRepository ?? new HelpResponseRepository(_context);
 
         public async Task<int> CommitAsync()
         {

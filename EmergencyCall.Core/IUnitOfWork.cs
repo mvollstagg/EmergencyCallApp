@@ -7,6 +7,7 @@ namespace EmergencyCall.Core
     {
         IUserRepository Users { get; }
         IHelpRequestRepository HelpRequests { get; }
+        IHelpResponseRepository HelpResponses { get; }
         Task<int> CommitAsync();
     }
 }

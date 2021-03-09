@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace EmergencyCall.Api.DTO.HelpRequestDTO
 {
@@ -13,6 +14,7 @@ namespace EmergencyCall.Api.DTO.HelpRequestDTO
         public bool IsActive { get; set; } 
         public bool IsDeleted { get; set; } = false;
         public DateTime RecordedAtDate { get; set; }
+        public ICollection<HelpResponseDTO.CreateHelpResponseDTO> HelpResponses { get; set; } 
 
     }
 }
