@@ -4,14 +4,16 @@ using EmergencyCall.Data.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EmergencyCall.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210418172007_usersdecimalfix")]
+    partial class usersdecimalfix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -172,32 +174,6 @@ namespace EmergencyCall.Data.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("EmergencyCall.Entities.UserLocationLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("Latitude")
-                        .HasColumnType("float");
-
-                    b.Property<double>("Longtitude")
-                        .HasColumnType("float");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserLocationLogs");
-                });
-
             modelBuilder.Entity("EmergencyCall.Entities.HelpRequest", b =>
                 {
                     b.HasOne("EmergencyCall.Entities.User", "User")
@@ -222,17 +198,6 @@ namespace EmergencyCall.Data.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("HelpRequest");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("EmergencyCall.Entities.UserLocationLog", b =>
-                {
-                    b.HasOne("EmergencyCall.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("User");
                 });

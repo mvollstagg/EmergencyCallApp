@@ -8,6 +8,7 @@ namespace EmergencyCall.Core.Services
     {
         Task<IEnumerable<HelpRequest>> GetAllHelpRequests();
         Task<HelpRequest> GetHelpRequestById(int id);
+        HelpRequest GetLastRequestByUser(int id);
         Task<HelpRequest> CreateHelpRequest(HelpRequest newHelpRequest);
         Task UpdateHelpRequest(HelpRequest helpRequestToBeUpdated, HelpRequest helpRequest);
         Task DeleteHelpRequest(HelpRequest helpRequest);

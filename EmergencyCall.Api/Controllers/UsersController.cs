@@ -13,6 +13,7 @@ using EmergencyCall.Services.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using EmergencyCall.Api.Models;
 using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace EmergencyCall.Api.Controllers
 {
@@ -24,8 +25,11 @@ namespace EmergencyCall.Api.Controllers
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
         private readonly LoginUser loginUser;
-        public UsersController(IUserService userService, IMapper mapper, IHttpContextAccessor httpContext)
+        private readonly ApiContext _context;
+
+        public UsersController(ApiContext context, IUserService userService, IMapper mapper, IHttpContextAccessor httpContext)
         {
+            _context = context;
             this._userService = userService;
             this._mapper = mapper;
 
@@ -59,11 +63,35 @@ namespace EmergencyCall.Api.Controllers
         public async Task<ActionResult<UserDTO>> GetCurrentUser()
         {
             var user = await _userService.GetUserById(loginUser.Id);
-            var userResource = _mapper.Map<User, UserDTO>(user);
-
-            return Ok(userResource);
+            return Ok(user);
         }
 
+        [HttpPost("")]
+        public async Task<ActionResult<UserDTO>> UpdateLocation(double lat,double lon)
+        {
+           int userId = Convert.ToInt32(User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimTypes.Actor))?.Value);
+            var oldUser = await _userService.GetUserById(userId);
+
+            if (oldUser == null)
+                return NotFound();
+            var newUser = oldUser;
+            newUser.Latitude = lat;
+            newUser.Longtitude = lon;
+
+            await _userService.UpdateUser(newUser, oldUser);
+
+            var updatedUser = await _userService.GetUserById(userId);
+
+            var updatedUserResource = _mapper.Map<User, UserDTO>(updatedUser);
+            var log = new UserLocationLog();
+            log.UserId = userId;
+            log.Latitude = lat;
+            log.Longtitude = lon;
+            _context.UserLocationLogs.Add(log);
+            _context.SaveChanges();
+
+            return Ok(updatedUserResource);
+        }
         [HttpPut("{id}")]
         public async Task<ActionResult<UserDTO>> UpdateUser(int id, [FromBody] SaveUserDTO saveUserResource)
         {

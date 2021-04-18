@@ -1,23 +1,24 @@
-using EmergencyCall.Data.DAL;
-using EmergencyCall.Entities;
+﻿using EmergencyCall.Entities;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace EmergencyCall.Data.DAL
+namespace EmergencyCall.Api
 {
-    public class ApplicationDbContext : DbContext
+    public class ApiContext:DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+        public ApiContext(DbContextOptions<ApiContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Seed();
         }
 
         public DbSet<HelpRequest> HelpRequests { get; set; }
         public DbSet<HelpResponse> HelpResponses { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<UserLocationLog> UserLocationLogs { get; set; }
-        
     }
 }

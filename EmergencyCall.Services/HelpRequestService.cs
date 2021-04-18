@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace EmergencyCall.Services
 {
@@ -38,6 +39,12 @@ namespace EmergencyCall.Services
         public async Task<HelpRequest> GetHelpRequestById(int id)
         {
             return await _unitOfWork.HelpRequests.GetByIdAsync(id);
+        }
+
+        public  HelpRequest GetLastRequestByUser(int id)
+        {
+            var a = _unitOfWork.HelpRequests.Find(e => e.UserId == id && e.RecordedAtDate > DateTime.Now.AddMinutes(-10));
+            return a.LastOrDefault();
         }
 
         public async Task UpdateHelpRequest(HelpRequest helpRequestToBeUpdated, HelpRequest helpRequest)

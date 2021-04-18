@@ -13,6 +13,8 @@ using EmergencyCall.Api.DTO.UserDTO;
 using EmergencyCall.Api.Validators;
 using AutoMapper;
 using EmergencyCall.Services.Helpers;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace EmergencyCall.Api.Controllers
 {
@@ -23,10 +25,12 @@ namespace EmergencyCall.Api.Controllers
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
         private readonly IConfiguration _config;
+        private readonly ApiContext _context;
         
 
-        public LoginController(IUserService userService, IConfiguration config, IMapper mapper)
+        public LoginController(ApiContext context,IUserService userService, IConfiguration config, IMapper mapper)
         {
+            _context = context;
             this._userService = userService;
             this._config = config;
             this._mapper = mapper;
@@ -58,22 +62,30 @@ namespace EmergencyCall.Api.Controllers
             try
             {
                 IActionResult response = Unauthorized();
-                User data = await _userService.UserLogin(user.Email, user.Password);
-                if (data!=null)
+
+                var data = await _context.Users
+               .FirstOrDefaultAsync(x => x.Email == user.Email.Trim().ToLower());
+
+                if (user != null)
                 {
-                    var StrToken = GenerateJSONWebToken(data);
-                        response = Ok( new
+                    if (HashHelper.VerifyPasswordHash(user.Password, data.SecretKey, data.PasswordHash))
+                    {
+                        var StrToken = GenerateJSONWebToken(data);
+                        response = Ok(new
                         {
                             token = StrToken,
                             message = "Giriş başarılı"
                         });
+                        return response;
+                    }
                 }
-                return response;
+                return BadRequest();
+
             }
             catch (Exception ex)
             {
                 // LogsServices.Log("Login - GenerateJSONWebToken", ex.Message.ToString(), 3);
-                return null;
+                return BadRequest();
             }
             
         }
@@ -99,7 +111,7 @@ namespace EmergencyCall.Api.Controllers
                     issuer: _config["Jwt:Issuer"],
                     audience: _config["Jwt:Issuer"],
                     claims,
-                    expires: DateTime.Now.AddMinutes(120),
+                    expires: DateTime.Now.AddDays(120),
                     signingCredentials: credentials);
 
                 var encodetoken = new JwtSecurityTokenHandler().WriteToken(token);

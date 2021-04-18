@@ -5,9 +5,9 @@ namespace EmergencyCall.Entities
 {
     public class HelpRequest : BaseEntity
     {
-        public decimal Altitude { get; set; }
+        public decimal Longtitute { get; set; }
         public decimal Latitude { get; set; }
-        public string Details { get; set; }
+        public string Description { get; set; }
         public bool IsCancelled { get; set; } = false;
         public string CancelReason { get; set; }
 

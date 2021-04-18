@@ -12,15 +12,15 @@ namespace EmergencyCall.Api.Validators
     {
         public CreateHelpRequestResourceValidator()
         {
-            RuleFor(a => a.Altitude)
+            RuleFor(a => a.Longtitute)
               .NotEmpty()
-              .WithMessage("Altitude boş geçilemez");
+              .WithMessage("Longtitute boş geçilemez");
 
             RuleFor(a => a.Latitude)
               .NotEmpty()
               .WithMessage("Latitude boş geçilemez");
 
-            RuleFor(a => a.Details)
+            RuleFor(a => a.Description)
               .MaximumLength(250);
 
             RuleFor(a => a.UserId)

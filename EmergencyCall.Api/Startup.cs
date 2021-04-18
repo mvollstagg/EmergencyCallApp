@@ -49,6 +49,8 @@ namespace EmergencyCall.Api
             services.AddControllers().AddJsonOptions(o => o.JsonSerializerOptions.DefaultBufferSize = 300);
             services.AddDbContext<ApplicationDbContext>(options => options
                                                                 .UseSqlServer(Configuration.GetConnectionString("DevConnection"), x => x.MigrationsAssembly("EmergencyApp.Data")));
+       services.AddDbContext<ApiContext>(options => options
+                                                                .UseSqlServer(Configuration.GetConnectionString("DevConnection"), x => x.MigrationsAssembly("EmergencyApp.Data")));
     
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>

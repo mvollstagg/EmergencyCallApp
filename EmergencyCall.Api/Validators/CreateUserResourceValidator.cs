@@ -19,7 +19,7 @@ namespace EmergencyCall.Api.Validators
 
             RuleFor(a => a.LastName)
               .NotEmpty()
-              .WithMessage("Soyad tarihi boş geçilemez")
+              .WithMessage("Soyad boş geçilemez")
               .MaximumLength(50);
 
             RuleFor(a => a.Email)
@@ -43,14 +43,14 @@ namespace EmergencyCall.Api.Validators
               .WithMessage("Şifre tekrarı boş geçilemez")
               .MaximumLength(50);
 
-            RuleFor(a => a.Gender)
-              .NotEmpty()
-              .WithMessage("Doğum tarihi boş geçilemez")
-              .MaximumLength(50);
+            //RuleFor(a => a.Gender)
+            //  .NotEmpty()
+            //  .WithMessage("Doğum tarihi boş geçilemez")
+            //  .MaximumLength(50);
 
-            RuleFor(a => a.BirthDate)
-              .Must(p=> !(p == DateTime.MinValue))
-              .WithMessage("Doğum tarihi boş geçilemez");
+            //RuleFor(a => a.BirthDate)
+            //  .Must(p=> !(p == DateTime.MinValue))
+            //  .WithMessage("Doğum tarihi boş geçilemez");
         }
     }
 }

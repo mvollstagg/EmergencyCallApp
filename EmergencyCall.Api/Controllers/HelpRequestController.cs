@@ -11,6 +11,9 @@ using EmergencyCall.Api.DTO;
 using EmergencyCall.Services.Helpers;
 using EmergencyCall.Api.DTO.HelpRequestDTO;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using System.Drawing;
+using Microsoft.EntityFrameworkCore;
 
 namespace EmergencyCall.Api.Controllers
 {
@@ -21,24 +24,74 @@ namespace EmergencyCall.Api.Controllers
     {
         private readonly IHelpRequestService _helpRequestService;
         private readonly IMapper _mapper;
-        public HelpRequestController(IHelpRequestService helpRequestService, IMapper mapper)
+        private readonly ApiContext _context;
+        public HelpRequestController(ApiContext context, IHelpRequestService helpRequestService, IMapper mapper)
         {
+            _context = context;
             this._helpRequestService = helpRequestService;
             this._mapper = mapper;
         }
 
         [HttpGet("")]
-        public async Task<ActionResult<IEnumerable<HelpRequestDTO>>> GetAllHelpRequests()
+        public async Task<ActionResult<IEnumerable<HelpRequestDTO>>> GetAllHelpRequests( double lat, double lon)
         {
-            var helpRequests = await _helpRequestService.GetAllHelpRequests();
-            var helpRequestsResources = _mapper.Map<IEnumerable<HelpRequest>, IEnumerable<HelpRequestDTO>>(helpRequests);
+            var userId = Convert.ToInt32(User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimTypes.Actor))?.Value);
 
-            return Ok(helpRequestsResources);
+            var user =await _context.Users.FindAsync(userId);
+
+            var helpRequests = await _context.HelpRequests
+                .AsNoTracking()
+                .Include(e=>e.User)
+                .ToListAsync();
+           var result = helpRequests.Select(e => new { 
+               Model=e,
+                Distance = DistanceTo(lat,lon,double.Parse(e.Latitude.ToString()),double.Parse(e.Longtitute.ToString()))
+            })
+                .OrderBy(e=>e.Distance)
+                .ToList();
+            result.RemoveAll(e => e.Distance > 15);
+            foreach (var item in result)
+            {
+                item.Model.HelpResponses.Clear();
+                item.Model.User.HelpResponses.Clear();
+                item.Model.User.HelpRequests.Clear();
+            }
+
+            user.Latitude = lat;
+            user.Longtitude = lon;
+            _context.Users.Update(user);
+            _context.SaveChanges();
+            return Ok(result.Take(5));
+        }
+        private double DistanceTo(double lat1, double lon1, double lat2, double lon2)
+        {
+            double rlat1 = Math.PI * lat1 / 180;
+            double rlat2 = Math.PI * lat2 / 180;
+            double theta = lon1 - lon2;
+            double rtheta = Math.PI * theta / 180;
+            double dist =
+                Math.Sin(rlat1) * Math.Sin(rlat2) + Math.Cos(rlat1) *
+                Math.Cos(rlat2) * Math.Cos(rtheta);
+            dist = Math.Acos(dist);
+            dist = dist * 180 / Math.PI;
+            dist = dist * 60 * 1.1515;
+
+            return dist * 1.609344;
+
+
         }
 
         [HttpPost("")]
         public async Task<ActionResult<HelpRequestDTO>> CreateHelpRequest([FromBody] CreateHelpRequestDTO createHelpRequestResource)
         {
+            //En yakýndakileri bul bildirim yolla
+            //Claims userId
+            createHelpRequestResource.UserId = Convert.ToInt32(User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimTypes.Actor))?.Value);
+
+            var tmp =  _helpRequestService.GetLastRequestByUser(createHelpRequestResource.UserId);
+            if (tmp != null)
+                return BadRequest();
+
             var validator = new CreateHelpRequestResourceValidator();
             var validationResult = await validator.ValidateAsync(createHelpRequestResource);
 

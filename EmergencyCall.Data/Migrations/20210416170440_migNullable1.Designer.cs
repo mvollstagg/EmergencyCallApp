@@ -4,14 +4,16 @@ using EmergencyCall.Data.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EmergencyCall.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210416170440_migNullable1")]
+    partial class migNullable1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,10 +28,13 @@ namespace EmergencyCall.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<decimal>("Altitude")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("CancelReason")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Details")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
@@ -42,9 +47,6 @@ namespace EmergencyCall.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("Latitude")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Longtitute")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("RecordedAtDate")
@@ -101,7 +103,11 @@ namespace EmergencyCall.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("BirthDate")
+                    b.Property<decimal>("Altitude")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("BirthDate")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
                     b.Property<string>("BloodGroup")
@@ -131,11 +137,8 @@ namespace EmergencyCall.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<double>("Latitude")
-                        .HasColumnType("float");
-
-                    b.Property<double>("Longtitude")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Latitude")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("NotifyId")
                         .HasColumnType("nvarchar(max)");
@@ -172,32 +175,6 @@ namespace EmergencyCall.Data.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("EmergencyCall.Entities.UserLocationLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("Latitude")
-                        .HasColumnType("float");
-
-                    b.Property<double>("Longtitude")
-                        .HasColumnType("float");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserLocationLogs");
-                });
-
             modelBuilder.Entity("EmergencyCall.Entities.HelpRequest", b =>
                 {
                     b.HasOne("EmergencyCall.Entities.User", "User")
@@ -222,17 +199,6 @@ namespace EmergencyCall.Data.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("HelpRequest");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("EmergencyCall.Entities.UserLocationLog", b =>
-                {
-                    b.HasOne("EmergencyCall.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("User");
                 });
